@@ -26,6 +26,10 @@ public, mobile-first **customer booking flow** wired end-to-end to Supabase.
 
 ---
 
+## Deploying
+
+See **[`DEPLOYMENT_CHECKLIST.md`](./DEPLOYMENT_CHECKLIST.md)** for a complete, COATPRO-specific production go-live checklist (frontend, backend/database, security, infrastructure, testing, launch) with priorities, recommended tools, and a smoke-run deploy order.
+
 ## Getting started
 
 ### 1. Install dependencies
