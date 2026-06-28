@@ -4,6 +4,7 @@ import { BookingFlow } from '@/components/booking/BookingFlow';
 import BookingCalendar from '@/components/booking/BookingCalendar';
 import TechnicianDashboard from '@/components/dashboard/TechnicianDashboard';
 import OwnerDashboard from '@/components/dashboard/OwnerDashboard';
+import BookingPaymentForm from '@/components/payment/BookingPaymentForm';
 import { Spinner } from '@/components/ui/Spinner';
 import { AlertIcon } from '@/components/ui/icons';
 
@@ -38,6 +39,26 @@ export default function App() {
   // The owner/admin dashboard is a full-screen page with its own tab nav.
   if (route === 'admin') {
     return <OwnerDashboard />;
+  }
+
+  // Stripe payment demo. In production you'd render <BookingPaymentForm/>
+  // right after creating the booking, passing the real id + amount.
+  if (route === 'pay') {
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <main className="mx-auto w-full max-w-md px-4 py-8">
+          <h1 className="mb-1 text-2xl font-bold text-slate-900">Complete your payment</h1>
+          <p className="mb-5 text-sm text-slate-500">
+            Demo screen. A real booking id + amount would be passed in after
+            creating the booking; this needs the <code>/api</code> functions and
+            Stripe keys to fully process.
+          </p>
+          <BookingPaymentForm bookingId="demo-booking-id" amount={99.99} customerName="Jordan Rivera" />
+        </main>
+        <footer className="py-8 text-center text-xs text-slate-400">Powered by COATPRO</footer>
+      </div>
+    );
   }
 
   // The standalone booking calendar is self-contained (no Supabase needed),

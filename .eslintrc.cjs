@@ -15,4 +15,15 @@ module.exports = {
       { allowConstantExport: true },
     ],
   },
+  overrides: [
+    {
+      // Server-side Vercel functions run in Node, not the browser.
+      files: ['api/**/*.ts'],
+      env: { node: true, browser: false },
+      rules: {
+        'no-undef': 'off', // TypeScript + Node types cover globals
+        '@typescript-eslint/no-explicit-any': 'off',
+      },
+    },
+  ],
 };

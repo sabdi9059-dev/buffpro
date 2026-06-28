@@ -14,7 +14,9 @@
 // ---- Enums ----------------------------------------------------------------
 export type BookingStatus =
   | 'pending'
+  | 'pending_payment'
   | 'confirmed'
+  | 'paid'
   | 'in_progress'
   | 'completed'
   | 'cancelled'

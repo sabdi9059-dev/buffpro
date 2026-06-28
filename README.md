@@ -125,6 +125,32 @@ model** the platform is built around:
 > `bookings` with different columns — run them in **separate** Supabase projects.
 > See `supabase/SETUP.md`.
 
+## Payments (Stripe)
+
+End-to-end card payments for a booking:
+
+| File | Role |
+| --- | --- |
+| `src/components/payment/BookingPaymentForm.tsx` | Frontend card form (Stripe `<CardElement/>`), loading/error/success states, validation. Demo at `/pay`. |
+| `src/lib/stripe.ts` | Browser Stripe.js loader (publishable key). |
+| `api/create-payment-intent.ts` | `POST /api/create-payment-intent` — validates the amount against the booking and returns a `clientSecret`. |
+| `api/webhook.ts` | `POST /api/webhook` — verifies the Stripe signature, marks the booking `paid`, and sends the Twilio SMS confirmation. |
+| `api/_lib/clients.ts` | Server-only Stripe / Supabase (service role) / Twilio clients. |
+
+**Flow:** create booking (`pending_payment`) → `create-payment-intent` → customer pays with the card form → Stripe `payment_intent.succeeded` webhook → booking → `paid` + SMS sent.
+
+**Required env** (see `.env.example`): `VITE_STRIPE_PUBLISHABLE_KEY` (client) and, server-only, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`.
+
+**Local webhook testing:**
+
+```bash
+stripe listen --forward-to localhost:3000/api/webhook   # prints the whsec_… secret
+```
+
+**Test cards:** success `4242 4242 4242 4242` · decline `4000 0000 0000 0002` · any future expiry (e.g. `12/25`) · any 3-digit CVC.
+
+The `/api` routes deploy as Vercel serverless functions; `vercel.json` keeps the SPA fallback from swallowing them.
+
 ## Security model
 
 - Every table has **RLS enabled**. The browser uses the public `anon` key.

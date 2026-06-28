@@ -31,7 +31,8 @@ do $$
 begin
   if not exists (select 1 from pg_type where typname = 'booking_status') then
     create type booking_status as enum
-      ('pending', 'confirmed', 'in_progress', 'completed', 'cancelled', 'no_show');
+      ('pending', 'pending_payment', 'confirmed', 'paid',
+       'in_progress', 'completed', 'cancelled', 'no_show');
   end if;
   if not exists (select 1 from pg_type where typname = 'team_role') then
     create type team_role as enum ('owner', 'manager', 'technician');
@@ -40,6 +41,11 @@ begin
     create type photo_kind as enum ('before', 'after', 'other');
   end if;
 end$$;
+
+-- If `booking_status` already existed from an older run, make sure the payment
+-- states are present. ADD VALUE must run OUTSIDE a transaction/function block.
+alter type booking_status add value if not exists 'pending_payment';
+alter type booking_status add value if not exists 'paid';
 
 -- -----------------------------------------------------------------------------
 -- updated_at trigger helper
