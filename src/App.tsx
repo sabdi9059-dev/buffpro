@@ -1,8 +1,14 @@
 import { useBusiness } from '@/hooks/useBusiness';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import { BookingFlow } from '@/components/booking/BookingFlow';
+import BookingCalendar from '@/components/booking/BookingCalendar';
 import { Spinner } from '@/components/ui/Spinner';
 import { AlertIcon } from '@/components/ui/icons';
+
+/** First path segment, lowercased (e.g. "/calendar" -> "calendar"). */
+function getRoute(): string {
+  return window.location.pathname.replace(/^\/+|\/+$/g, '').split('/')[0].toLowerCase();
+}
 
 /**
  * Public booking page for a single detailing business.
@@ -18,42 +24,51 @@ function getBusinessSlug(): string {
 }
 
 export default function App() {
-  const slug = getBusinessSlug();
-  const { business, services, loading, error, reload } = useBusiness(slug);
+  // Tiny client-side router. The standalone booking calendar is self-contained
+  // (no Supabase needed), so it renders regardless of env configuration.
+  const isCalendar = getRoute() === 'calendar';
 
   return (
     <div className="min-h-screen">
       <Header />
-
-      <main className="mx-auto w-full max-w-2xl px-4 py-6 sm:py-10">
-        {!isSupabaseConfigured ? (
-          <SetupNotice />
-        ) : loading ? (
-          <div className="flex flex-col items-center gap-3 py-20 text-slate-500">
-            <Spinner className="h-8 w-8 text-brand-600" />
-            <p>Loading booking page…</p>
-          </div>
-        ) : error || !business ? (
-          <ErrorState message={error ?? 'Business not found.'} onRetry={reload} />
-        ) : (
-          <>
-            <div className="mb-6">
-              <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
-                Book with {business.name}
-              </h1>
-              <p className="mt-1 text-slate-500">
-                Select a service, choose a time, and you&apos;re set.
-              </p>
-            </div>
-            <BookingFlow business={business} services={services} />
-          </>
-        )}
-      </main>
-
+      {isCalendar ? <BookingCalendar /> : <BookingPage />}
       <footer className="py-8 text-center text-xs text-slate-400">
         Powered by COATPRO
       </footer>
     </div>
+  );
+}
+
+/** Supabase-backed public booking page (the original multi-step flow). */
+function BookingPage() {
+  const slug = getBusinessSlug();
+  const { business, services, loading, error, reload } = useBusiness(slug);
+
+  return (
+    <main className="mx-auto w-full max-w-2xl px-4 py-6 sm:py-10">
+      {!isSupabaseConfigured ? (
+        <SetupNotice />
+      ) : loading ? (
+        <div className="flex flex-col items-center gap-3 py-20 text-slate-500">
+          <Spinner className="h-8 w-8 text-brand-600" />
+          <p>Loading booking page…</p>
+        </div>
+      ) : error || !business ? (
+        <ErrorState message={error ?? 'Business not found.'} onRetry={reload} />
+      ) : (
+        <>
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+              Book with {business.name}
+            </h1>
+            <p className="mt-1 text-slate-500">
+              Select a service, choose a time, and you&apos;re set.
+            </p>
+          </div>
+          <BookingFlow business={business} services={services} />
+        </>
+      )}
+    </main>
   );
 }
 

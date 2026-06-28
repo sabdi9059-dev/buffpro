@@ -20,6 +20,7 @@ public, mobile-first **customer booking flow** wired end-to-end to Supabase.
 | **Availability** | `get_available_slots` RPC computes open time slots server-side from business hours + existing bookings (no booking data leaks to the client). |
 | **Atomic booking** | `create_booking` RPC upserts the customer and creates the booking in one transaction, rejecting double-bookings. |
 | **Type safety** | Hand-written `src/types/database.ts` typing the Supabase client end-to-end. |
+| **Standalone booking calendar** | `src/components/booking/BookingCalendar.tsx` — a self-contained, copy-paste-ready widget (service dropdown, custom 7–30 day calendar, time slots, customer/vehicle form, live summary, ceramic upsell, "Book & Pay Now"). No Supabase/Stripe deps yet — wire them via the `onSubmit` prop. View it at `/calendar`. |
 
 ---
 
@@ -82,12 +83,13 @@ src/
   components/
     ui/                  # Spinner + hand-rolled SVG icons (no icon lib)
     booking/             # the booking wizard
-      BookingFlow.tsx    # orchestrates the steps + submission
+      BookingFlow.tsx    # orchestrates the steps + submission (Supabase-backed)
       StepIndicator.tsx
       ServiceStep.tsx
       DateTimeStep.tsx
       DetailsStep.tsx
       ConfirmationStep.tsx
+      BookingCalendar.tsx # standalone calendar widget (route: /calendar)
   App.tsx                # public booking page shell
 supabase/
   schema.sql             # tables, RLS, RPCs, seed data
