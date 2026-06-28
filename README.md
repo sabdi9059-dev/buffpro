@@ -21,6 +21,7 @@ public, mobile-first **customer booking flow** wired end-to-end to Supabase.
 | **Atomic booking** | `create_booking` RPC upserts the customer and creates the booking in one transaction, rejecting double-bookings. |
 | **Type safety** | Hand-written `src/types/database.ts` typing the Supabase client end-to-end. |
 | **Standalone booking calendar** | `src/components/booking/BookingCalendar.tsx` — a self-contained, copy-paste-ready widget (service dropdown, custom 7–30 day calendar, time slots, customer/vehicle form, live summary, ceramic upsell, "Book & Pay Now"). No Supabase/Stripe deps yet — wire them via the `onSubmit` prop. View it at `/calendar`. |
+| **Technician dashboard** | `src/components/dashboard/TechnicianDashboard.tsx` — mobile-first daily dashboard: header, today's stats, jobs list with Start/End/Complete actions, Details + Complete-Job modals (photo upload preview), 30s auto-refresh with new-booking/cancellation notifications, and an empty state. Ships with mock data; pass a `fetchJobs` prop for real data. View it at `/dashboard`. |
 
 ---
 
@@ -64,8 +65,14 @@ npm run preview  # preview the production build
 npm run lint     # ESLint
 ```
 
-Open the dev URL. The booking page loads the business identified by the URL
-path (e.g. `/demo-detailing`), falling back to `VITE_DEFAULT_BUSINESS_SLUG`.
+Open the dev URL. Routes:
+
+- `/` (or `/<business-slug>`) — Supabase-backed public booking page.
+- `/calendar` — standalone booking calendar widget (no backend needed).
+- `/dashboard` — technician dashboard with mock data (no backend needed).
+
+The booking page loads the business identified by the URL path
+(e.g. `/demo-detailing`), falling back to `VITE_DEFAULT_BUSINESS_SLUG`.
 
 ---
 
@@ -90,6 +97,8 @@ src/
       DetailsStep.tsx
       ConfirmationStep.tsx
       BookingCalendar.tsx # standalone calendar widget (route: /calendar)
+  dashboard/
+    TechnicianDashboard.tsx # mobile-first tech dashboard (route: /dashboard)
   App.tsx                # public booking page shell
 supabase/
   schema.sql             # tables, RLS, RPCs, seed data

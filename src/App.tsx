@@ -2,6 +2,7 @@ import { useBusiness } from '@/hooks/useBusiness';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import { BookingFlow } from '@/components/booking/BookingFlow';
 import BookingCalendar from '@/components/booking/BookingCalendar';
+import TechnicianDashboard from '@/components/dashboard/TechnicianDashboard';
 import { Spinner } from '@/components/ui/Spinner';
 import { AlertIcon } from '@/components/ui/icons';
 
@@ -24,14 +25,21 @@ function getBusinessSlug(): string {
 }
 
 export default function App() {
-  // Tiny client-side router. The standalone booking calendar is self-contained
-  // (no Supabase needed), so it renders regardless of env configuration.
-  const isCalendar = getRoute() === 'calendar';
+  // Tiny client-side router. App itself calls no hooks, so early returns are
+  // safe; each route renders a component that owns its own hooks.
+  const route = getRoute();
 
+  // The technician dashboard is a full-screen page with its own header.
+  if (route === 'dashboard') {
+    return <TechnicianDashboard technicianName="John" />;
+  }
+
+  // The standalone booking calendar is self-contained (no Supabase needed),
+  // so it renders regardless of env configuration.
   return (
     <div className="min-h-screen">
       <Header />
-      {isCalendar ? <BookingCalendar /> : <BookingPage />}
+      {route === 'calendar' ? <BookingCalendar /> : <BookingPage />}
       <footer className="py-8 text-center text-xs text-slate-400">
         Powered by COATPRO
       </footer>
