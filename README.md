@@ -151,6 +151,32 @@ stripe listen --forward-to localhost:3000/api/webhook   # prints the whsec_… s
 
 The `/api` routes deploy as Vercel serverless functions; `vercel.json` keeps the SPA fallback from swallowing them.
 
+## SMS (Twilio)
+
+Transactional + scheduled texts, all server-side:
+
+| File | Role |
+| --- | --- |
+| `api/_lib/sms.ts` | Twilio sender core: E.164 validation, message templates, retry with backoff, logging + **cost tracking**, budget alert, and the four senders (`sendConfirmation`, `sendReminder`, `sendOnTheWay`, `sendCompletion`). |
+| `api/notify.ts` | `POST /api/notify` — event trigger ({ type, booking_id, … }) for confirmation / on-the-way / completion / reminder. |
+| `api/cron/daily-reminders.ts` | Scheduled job: finds tomorrow's bookings and texts each customer. Wired to a Vercel cron in `vercel.json` (08:00 UTC). |
+| `sms_messages` table | Every send is logged (template, segments, `cost_usd`, status) in `full_schema.sql` for auditing + budgeting. |
+
+**Triggers**
+1. Booking confirmed / paid → confirmation (the Stripe webhook calls `sendConfirmation`).
+2. 24h before → reminder (the daily cron).
+3. Tech starts job → on-the-way with ETA (`POST /api/notify` `type: on_the_way`).
+4. Job completed → completion with review link (`type: completion`).
+5. Daily 08:00 cron → reminders for next-day bookings.
+
+**Cost tracking:** each send records estimated cost (`SMS_COST_PER_MESSAGE`, ~$0.0079/segment) to `sms_messages`; `checkMonthlyBudget()` warns when month-to-date spend exceeds `SMS_MONTHLY_BUDGET_USD`.
+
+**Reliability:** invalid numbers are rejected before calling Twilio; transient failures (rate limit / 5xx / network) retry up to 3× with exponential backoff; everything is logged and senders never throw.
+
+**Required env** (see `.env.example`): `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`, plus optional `SMS_COST_PER_MESSAGE`, `SMS_MONTHLY_BUDGET_USD`, `CRON_SECRET`, `INTERNAL_API_SECRET`, `APP_URL`.
+
+**Dev test numbers** (Twilio magic numbers): `+15005550006` succeeds · `+15005550001` invalid · `+15005550009` can't receive.
+
 ## Security model
 
 - Every table has **RLS enabled**. The browser uses the public `anon` key.

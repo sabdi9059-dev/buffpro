@@ -13,7 +13,8 @@
 //   * STRIPE_WEBHOOK_SECRET must match the endpoint's signing secret.
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type Stripe from 'stripe';
-import { getTwilioClient, stripe, supabaseAdmin, TWILIO_FROM } from './_lib/clients';
+import { stripe, supabaseAdmin } from './_lib/clients';
+import { sendConfirmation } from './_lib/sms';
 
 // Stripe signature verification needs the raw, unparsed body.
 export const config = { api: { bodyParser: false } };
@@ -66,7 +67,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .from('bookings')
         .update({ status: 'paid' })
         .eq('id', bookingId)
-        .select('id, scheduled_at, customer_id')
+        .select('id, business_id, scheduled_at, customer_id, services(name), customers(full_name, phone)')
         .single();
 
       if (updateError || !booking) {
@@ -75,30 +76,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(500).json({ error: 'Could not update booking' });
       }
 
-      // 2b. Send the SMS confirmation (best-effort — don't fail the webhook).
-      try {
-        const { data: customer } = await supabaseAdmin
-          .from('customers')
-          .select('full_name, phone')
-          .eq('id', booking.customer_id)
-          .single();
-
-        if (customer?.phone && TWILIO_FROM) {
-          const when = new Date(booking.scheduled_at).toLocaleString('en-US', {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-          });
-          await getTwilioClient().messages.create({
-            to: customer.phone,
-            from: TWILIO_FROM,
-            body: `COATPRO: Payment received! Your detail is confirmed for ${when}. See you then.`,
-          });
-        }
-      } catch (smsErr) {
-        console.error('[webhook] SMS send failed (booking still marked paid):', smsErr);
+      // 2b. Send the SMS confirmation via the shared sender (best-effort —
+      // sendConfirmation handles its own validation/logging and never throws).
+      const row = booking as unknown as {
+        id: string;
+        business_id: string;
+        scheduled_at: string;
+        services: { name: string } | null;
+        customers: { full_name: string; phone: string } | null;
+      };
+      if (row.customers?.phone) {
+        await sendConfirmation(
+          row.customers.phone,
+          row.customers.full_name ?? 'there',
+          { serviceName: row.services?.name ?? 'appointment', scheduledAt: row.scheduled_at },
+          { businessId: row.business_id, bookingId: row.id },
+        );
       }
 
       // 3. Log success.

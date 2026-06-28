@@ -186,6 +186,24 @@ create table if not exists loyalty_points (
 create index if not exists loyalty_customer_idx on loyalty_points (customer_id);
 create index if not exists loyalty_business_idx on loyalty_points (business_id);
 
+-- 9) sms_messages — log of every SMS sent (for auditing + cost tracking).
+create table if not exists sms_messages (
+  id          uuid primary key default gen_random_uuid(),
+  business_id uuid references profiles (id) on delete set null,
+  booking_id  uuid references bookings (id) on delete set null,
+  to_number   text not null,
+  template    text not null,        -- confirmation | reminder | on_the_way | completion | custom
+  body        text not null,
+  twilio_sid  text,
+  status      text,                 -- queued | sent | delivered | failed | invalid | ...
+  segments    int not null default 1,
+  cost_usd    numeric(10,5) not null default 0,
+  error       text,
+  created_at  timestamptz not null default now()
+);
+create index if not exists sms_business_idx on sms_messages (business_id);
+create index if not exists sms_created_idx on sms_messages (created_at);
+
 -- updated_at triggers (tables that track edits)
 do $$
 declare t text;
@@ -251,6 +269,7 @@ alter table bookings      enable row level security;
 alter table photos        enable row level security;
 alter table reviews       enable row level security;
 alter table loyalty_points enable row level security;
+alter table sms_messages  enable row level security;
 
 -- =============================================================================
 -- POLICIES
@@ -388,6 +407,13 @@ drop policy if exists loyalty_write on loyalty_points;
 create policy loyalty_write on loyalty_points for all
   using (is_business_owner(business_id))
   with check (is_business_owner(business_id));
+
+-- ---- sms_messages ----------------------------------------------------------
+-- Staff can read their business's SMS log; writes happen server-side via the
+-- service-role key (which bypasses RLS), so no insert policy is needed here.
+drop policy if exists sms_select on sms_messages;
+create policy sms_select on sms_messages for select
+  using (is_business_staff(business_id));
 
 -- =============================================================================
 -- CONVENIENCE RPCs
