@@ -109,6 +109,22 @@ supabase/
 
 ---
 
+## Full production database (v2)
+
+Beyond the minimal demo schema, the repo ships the **complete multi-tenant data
+model** the platform is built around:
+
+| File | What it is |
+| --- | --- |
+| `supabase/full_schema.sql` | 8 tables (`profiles`, `team_members`, `customers`, `services`, `bookings`, `photos`, `reviews`, `loyalty_points`) with UUID PKs, FKs, indexes, `updated_at` triggers, role-based RLS (owner / technician / customer), and convenience RPCs. |
+| `supabase/SETUP.md` | Step-by-step setup, the RLS model, and copy-paste test queries. |
+| `src/types/coatpro-db.ts` | TypeScript interface for every table + a typed `CoatproDatabase`. |
+| `src/lib/queries.ts` | Typed, error-handled implementations of the common queries (today's jobs, revenue, customer count, insert/complete booking, history, 7-day revenue trend, photos, reviews, loyalty points). |
+
+> The demo `schema.sql` and `full_schema.sql` both define `services`/`customers`/
+> `bookings` with different columns — run them in **separate** Supabase projects.
+> See `supabase/SETUP.md`.
+
 ## Security model
 
 - Every table has **RLS enabled**. The browser uses the public `anon` key.
