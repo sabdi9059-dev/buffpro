@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="COATPRO — the auto detailing app built by detailers for detailers. Online booking, instant payments, photo proof, analytics, loyalty, and SMS reminders."
+    />
+    <title>COATPRO — The Auto Detailing App Built For Detailers</title>
+
+    <!--
+      Styling: Tailwind via the Play CDN so this file is fully copy-pasteable
+      and needs no build step. For best production performance, compile Tailwind
+      instead (https://tailwindcss.com/docs/installation) — the markup below is
+      unchanged either way. System fonts are used (Tailwind's default stack),
+      so there are no web-font requests.
+    -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Brand palette per spec.
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: { purple: '#667eea', blue: '#764ba2' },
+              accent: '#10b981',
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      /* Reusable hero/CTA gradient (purple → blue). */
+      .brand-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+    </style>
+  </head>
+
+  <body class="bg-white text-slate-800 antialiased">
+    <!-- ===================== NAV ===================== -->
+    <header class="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
+      <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+        <a href="#top" class="flex items-center gap-2">
+          <span class="flex h-8 w-8 items-center justify-center rounded-lg brand-gradient font-extrabold text-white">C</span>
+          <span class="text-lg font-extrabold tracking-tight text-slate-900">COATPRO</span>
+        </a>
+        <div class="hidden items-center gap-6 text-sm font-medium text-slate-600 md:flex">
+          <a href="#features" class="hover:text-slate-900">Features</a>
+          <a href="#pricing" class="hover:text-slate-900">Pricing</a>
+          <a href="#faq" class="hover:text-slate-900">FAQ</a>
+        </div>
+        <a
+          href="#beta"
+          class="rounded-lg brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
+          >Join Beta</a
+        >
+      </nav>
+    </header>
+
+    <main id="top">
+      <!-- ===================== HERO ===================== -->
+      <section class="brand-gradient">
+        <div class="mx-auto max-w-4xl px-4 py-20 text-center sm:py-28">
+          <h1 class="text-3xl font-extrabold leading-tight text-white sm:text-5xl">
+            ⚡ The Auto Detailing App Built BY Detailers FOR Detailers
+          </h1>
+          <p class="mx-auto mt-5 max-w-2xl text-lg text-white/90">
+            Stop using Google Calendar + Venmo. Automate everything.
+          </p>
+          <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <a
+              href="#beta"
+              class="w-full rounded-xl bg-white px-7 py-4 text-base font-bold text-brand-blue shadow-lg transition hover:bg-slate-100 sm:w-auto"
+              >Join Beta (Free 30 Days)</a
+            >
+            <a
+              href="#features"
+              class="w-full rounded-xl border border-white/40 px-7 py-4 text-base font-semibold text-white transition hover:bg-white/10 sm:w-auto"
+              >See features</a
+            >
+          </div>
+          <p class="mt-4 text-sm text-white/70">No credit card required · Cancel anytime</p>
+        </div>
+      </section>
+
+      <!-- ===================== FEATURES ===================== -->
+      <section id="features" class="mx-auto max-w-6xl px-4 py-16 sm:py-24">
+        <div class="mx-auto max-w-2xl text-center">
+          <h2 class="text-3xl font-bold text-slate-900">Everything you need to run the business</h2>
+          <p class="mt-3 text-slate-600">Built for solo mobile detailers and small shops alike.</p>
+        </div>
+
+        <!-- 1 col mobile → 2 → 3 columns -->
+        <div class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <!-- Feature card template repeated -->
+          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+            <div class="text-3xl" aria-hidden="true">📱</div>
+            <h3 class="mt-3 text-lg font-bold text-slate-900">Online Booking</h3>
+            <p class="mt-1 text-slate-600">Customers book 24/7 from any device — no phone tag.</p>
+          </article>
+
+          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+            <div class="text-3xl" aria-hidden="true">💰</div>
+            <h3 class="mt-3 text-lg font-bold text-slate-900">Instant Payments</h3>
+            <p class="mt-1 text-slate-600">Get paid with Stripe — same day, straight to your bank.</p>
+          </article>
+
+          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+            <div class="text-3xl" aria-hidden="true">📸</div>
+            <h3 class="mt-3 text-lg font-bold text-slate-900">Photo Gallery</h3>
+            <p class="mt-1 text-slate-600">Before/after proof builds trust and prevents disputes.</p>
+          </article>
+
+          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+            <div class="text-3xl" aria-hidden="true">📊</div>
+            <h3 class="mt-3 text-lg font-bold text-slate-900">Real Analytics</h3>
+            <p class="mt-1 text-slate-600">Track revenue, bookings, and customer retention at a glance.</p>
+          </article>
+
+          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+            <div class="text-3xl" aria-hidden="true">👥</div>
+            <h3 class="mt-3 text-lg font-bold text-slate-900">Loyalty Program</h3>
+            <p class="mt-1 text-slate-600">Automatic points keep customers coming back.</p>
+          </article>
+
+          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+            <div class="text-3xl" aria-hidden="true">⏰</div>
+            <h3 class="mt-3 text-lg font-bold text-slate-900">SMS Reminders</h3>
+            <p class="mt-1 text-slate-600">Auto-text customers 24h before — slash no-shows.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ===================== PRICING ===================== -->
+      <section id="pricing" class="bg-slate-50 py-16 sm:py-24">
+        <div class="mx-auto max-w-6xl px-4">
+          <div class="mx-auto max-w-2xl text-center">
+            <h2 class="text-3xl font-bold text-slate-900">Simple, honest pricing</h2>
+            <p class="mt-3 text-slate-600">Start free for 30 days. Upgrade when you're ready.</p>
+          </div>
+
+          <div class="mt-12 grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3">
+            <!-- Starter -->
+            <div class="flex flex-col rounded-2xl border border-slate-200 bg-white p-7 shadow-sm">
+              <h3 class="text-lg font-bold text-slate-900">Starter</h3>
+              <p class="mt-2"><span class="text-4xl font-extrabold text-slate-900">$19</span><span class="text-slate-500">/mo</span></p>
+              <p class="mt-1 text-sm text-slate-500">For solo detailers getting started.</p>
+              <ul class="mt-5 space-y-2 text-sm text-slate-600">
+                <li>✓ Online booking</li>
+                <li>✓ Stripe payments</li>
+                <li>✓ Up to 50 bookings/mo</li>
+                <li>✓ SMS reminders</li>
+              </ul>
+              <a href="#beta" class="mt-6 rounded-lg border border-slate-300 px-5 py-3 text-center font-semibold text-slate-700 transition hover:bg-slate-50">Choose Starter</a>
+            </div>
+
+            <!-- Pro (highlighted) -->
+            <div class="relative flex flex-col rounded-2xl border-2 border-brand-purple bg-white p-7 shadow-lg lg:-mt-3 lg:mb-0">
+              <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full brand-gradient px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">Popular</span>
+              <h3 class="text-lg font-bold text-slate-900">Pro</h3>
+              <p class="mt-2"><span class="text-4xl font-extrabold text-slate-900">$49</span><span class="text-slate-500">/mo</span></p>
+              <p class="mt-1 text-sm text-slate-500">For growing detailers who want it all.</p>
+              <ul class="mt-5 space-y-2 text-sm text-slate-600">
+                <li>✓ Everything in Starter</li>
+                <li>✓ Unlimited bookings</li>
+                <li>✓ Photo gallery</li>
+                <li>✓ Analytics dashboard</li>
+                <li>✓ Loyalty program</li>
+              </ul>
+              <a href="#beta" class="mt-6 rounded-lg brand-gradient px-5 py-3 text-center font-semibold text-white shadow transition hover:opacity-90">Choose Pro</a>
+            </div>
+
+            <!-- Business -->
+            <div class="flex flex-col rounded-2xl border border-slate-200 bg-white p-7 shadow-sm">
+              <h3 class="text-lg font-bold text-slate-900">Business</h3>
+              <p class="mt-2"><span class="text-4xl font-extrabold text-slate-900">$99</span><span class="text-slate-500">/mo</span></p>
+              <p class="mt-1 text-sm text-slate-500">For shops with a team.</p>
+              <ul class="mt-5 space-y-2 text-sm text-slate-600">
+                <li>✓ Everything in Pro</li>
+                <li>✓ Up to 15 staff accounts</li>
+                <li>✓ Technician scheduling</li>
+                <li>✓ Priority support</li>
+              </ul>
+              <a href="#beta" class="mt-6 rounded-lg border border-slate-300 px-5 py-3 text-center font-semibold text-slate-700 transition hover:bg-slate-50">Choose Business</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== TESTIMONIALS ===================== -->
+      <section class="mx-auto max-w-6xl px-4 py-16 sm:py-24">
+        <div class="mx-auto max-w-2xl text-center">
+          <h2 class="text-3xl font-bold text-slate-900">Loved by detailers</h2>
+          <p class="mt-3 text-slate-600">Real results from the shop floor.</p>
+        </div>
+
+        <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <figure class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="text-accent" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote class="mt-3 text-slate-700">
+              “I stopped chasing payments overnight. COATPRO books the job and collects the deposit before I even drive over.”
+            </blockquote>
+            <figcaption class="mt-4 text-sm font-semibold text-slate-900">John Doe<span class="block font-normal text-slate-500">Detailer in Columbus, OH</span></figcaption>
+          </figure>
+
+          <figure class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="text-accent" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote class="mt-3 text-slate-700">
+              “No-shows dropped to almost zero thanks to the SMS reminders. The before/after photos basically sell the upsells for me.”
+            </blockquote>
+            <figcaption class="mt-4 text-sm font-semibold text-slate-900">Maria Santos<span class="block font-normal text-slate-500">Mobile Detailer, Austin, TX</span></figcaption>
+          </figure>
+
+          <figure class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="text-accent" aria-label="5 out of 5 stars">★★★★★</div>
+            <blockquote class="mt-3 text-slate-700">
+              “Running a 6-person shop got way easier. I can see every tech's schedule and the day's revenue from my phone.”
+            </blockquote>
+            <figcaption class="mt-4 text-sm font-semibold text-slate-900">Andre Williams<span class="block font-normal text-slate-500">Shop Owner, Atlanta, GA</span></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- ===================== FAQ ===================== -->
+      <section id="faq" class="bg-slate-50 py-16 sm:py-24">
+        <div class="mx-auto max-w-3xl px-4">
+          <h2 class="text-center text-3xl font-bold text-slate-900">Frequently asked questions</h2>
+
+          <div class="mt-10 divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
+            <!-- Each <details> is a native, accessible, keyboard-navigable accordion.
+                 Vanilla JS below closes siblings so only one stays open. -->
+            <details class="faq group p-5" open>
+              <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-slate-900">
+                How does payment work?
+                <span class="ml-4 text-slate-400 transition group-open:rotate-45" aria-hidden="true">+</span>
+              </summary>
+              <p class="mt-3 text-slate-600">
+                Customers pay securely by card through Stripe when they book. Funds are deposited
+                to your bank — typically the same or next business day. You can also collect a
+                deposit and charge the balance later.
+              </p>
+            </details>
+
+            <details class="faq group p-5">
+              <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-slate-900">
+                Can I cancel anytime?
+                <span class="ml-4 text-slate-400 transition group-open:rotate-45" aria-hidden="true">+</span>
+              </summary>
+              <p class="mt-3 text-slate-600">
+                Yes. There are no contracts. Cancel from your dashboard whenever you like — your
+                30-day beta is completely free.
+              </p>
+            </details>
+
+            <details class="faq group p-5">
+              <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-slate-900">
+                Do my customers need to download an app?
+                <span class="ml-4 text-slate-400 transition group-open:rotate-45" aria-hidden="true">+</span>
+              </summary>
+              <p class="mt-3 text-slate-600">
+                No. They book from any browser via a link you share. Everything works great on a
+                phone — no downloads, no accounts required to book.
+              </p>
+            </details>
+
+            <details class="faq group p-5">
+              <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-slate-900">
+                Will I get reminders sent automatically?
+                <span class="ml-4 text-slate-400 transition group-open:rotate-45" aria-hidden="true">+</span>
+              </summary>
+              <p class="mt-3 text-slate-600">
+                Yes. COATPRO texts customers a confirmation when they book and a reminder 24 hours
+                before the appointment, which dramatically reduces no-shows.
+              </p>
+            </details>
+
+            <details class="faq group p-5">
+              <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-slate-900">
+                Can I add my technicians?
+                <span class="ml-4 text-slate-400 transition group-open:rotate-45" aria-hidden="true">+</span>
+              </summary>
+              <p class="mt-3 text-slate-600">
+                On the Business plan you can add up to 15 staff. Each technician sees only the jobs
+                assigned to them and can mark them complete from their phone.
+              </p>
+            </details>
+
+            <details class="faq group p-5">
+              <summary class="flex cursor-pointer list-none items-center justify-between font-semibold text-slate-900">
+                Is my data secure?
+                <span class="ml-4 text-slate-400 transition group-open:rotate-45" aria-hidden="true">+</span>
+              </summary>
+              <p class="mt-3 text-slate-600">
+                Absolutely. Payments are handled by Stripe (PCI-compliant) and your business data is
+                isolated so no one else can ever see it.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== BETA SIGNUP ===================== -->
+      <section id="beta" class="brand-gradient py-16 sm:py-24">
+        <div class="mx-auto max-w-xl px-4 text-center">
+          <h2 class="text-3xl font-bold text-white">Join the free 30-day beta</h2>
+          <p class="mt-3 text-white/90">Be first in line. We'll reach out with your invite.</p>
+
+          <form id="beta-form" class="mt-8 space-y-3 text-left" novalidate>
+            <div>
+              <label for="beta-email" class="mb-1 block text-sm font-medium text-white/90">Email</label>
+              <input
+                id="beta-email"
+                name="email"
+                type="email"
+                required
+                autocomplete="email"
+                placeholder="you@business.com"
+                class="w-full rounded-lg border border-transparent px-4 py-3 text-slate-900 outline-none focus:ring-4 focus:ring-white/40"
+              />
+            </div>
+            <div>
+              <label for="beta-phone" class="mb-1 block text-sm font-medium text-white/90">Phone</label>
+              <input
+                id="beta-phone"
+                name="phone"
+                type="tel"
+                autocomplete="tel"
+                placeholder="+1 (555) 123-4567"
+                class="w-full rounded-lg border border-transparent px-4 py-3 text-slate-900 outline-none focus:ring-4 focus:ring-white/40"
+              />
+            </div>
+
+            <!-- Inline validation / server error message -->
+            <p id="beta-error" class="hidden rounded-lg bg-red-900/40 p-3 text-sm text-white" role="alert"></p>
+
+            <button
+              id="beta-submit"
+              type="submit"
+              class="w-full rounded-xl bg-accent px-6 py-4 text-base font-bold text-white shadow-lg transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              Join Beta
+            </button>
+          </form>
+
+          <!-- Success message (revealed by JS after a successful submit) -->
+          <div id="beta-success" class="hidden rounded-xl bg-white/10 p-6 text-white" role="status">
+            <p class="text-2xl">🎉</p>
+            <p class="mt-2 text-lg font-bold">You're on the list!</p>
+            <p class="mt-1 text-white/90">Check your inbox — we'll send your beta invite shortly.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="bg-slate-900 py-10 text-slate-400">
+      <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 sm:flex-row">
+        <p class="text-sm">© <span id="year"></span> COATPRO. All rights reserved.</p>
+        <nav class="flex items-center gap-5 text-sm">
+          <a href="/privacy" class="hover:text-white">Privacy</a>
+          <a href="/terms" class="hover:text-white">Terms</a>
+          <a href="mailto:hello@coatpro.app" class="hover:text-white">Contact</a>
+        </nav>
+        <div class="flex items-center gap-4" aria-label="Social media">
+          <!-- Simple inline SVG icons (no icon library) -->
+          <a href="#" aria-label="Twitter" class="hover:text-white">
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 5.9c-.7.3-1.5.5-2.3.6.8-.5 1.4-1.3 1.7-2.2-.8.5-1.7.8-2.6 1a4 4 0 0 0-6.8 3.6A11.3 11.3 0 0 1 3.1 4.7a4 4 0 0 0 1.2 5.3c-.6 0-1.2-.2-1.8-.5v.1a4 4 0 0 0 3.2 3.9c-.6.1-1.2.2-1.8.1a4 4 0 0 0 3.7 2.8A8 8 0 0 1 2 18.6a11.3 11.3 0 0 0 6.1 1.8c7.3 0 11.4-6.1 11.4-11.4v-.5c.8-.6 1.5-1.3 2-2.1z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram" class="hover:text-white">
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.3 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.3-2.2-.4a3.7 3.7 0 0 1-1.4-.9 3.7 3.7 0 0 1-.9-1.4c-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1.1.1-1.7.2-2.1.4-.5.2-.9.4-1.3.8-.4.4-.6.8-.8 1.3-.2.4-.3 1-.4 2.1-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1.1.2 1.7.4 2.1.2.5.4.9.8 1.3.4.4.8.6 1.3.8.4.2 1 .3 2.1.4 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1-.1 1.7-.2 2.1-.4.5-.2.9-.4 1.3-.8.4-.4.6-.8.8-1.3.2-.4.3-1 .4-2.1.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1.1-.2-1.7-.4-2.1a3.5 3.5 0 0 0-.8-1.3 3.5 3.5 0 0 0-1.3-.8c-.4-.2-1-.3-2.1-.4-1.2-.1-1.6-.1-4.7-.1zm0 3.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8zm0 8a3.1 3.1 0 1 0 0-6.2 3.1 3.1 0 0 0 0 6.2zm6.3-8.2a1.1 1.1 0 1 1-2.3 0 1.1 1.1 0 0 1 2.3 0z"/></svg>
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ===================== VANILLA JS ===================== -->
+    <script>
+      // Current year in the footer.
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // FAQ: keep only one <details> open at a time (still fully keyboard-accessible).
+      const faqs = document.querySelectorAll('details.faq');
+      faqs.forEach((el) => {
+        el.addEventListener('toggle', () => {
+          if (el.open) faqs.forEach((other) => other !== el && (other.open = false));
+        });
+      });
+
+      // Beta signup form → POST to the backend API.
+      const form = document.getElementById('beta-form');
+      const errorBox = document.getElementById('beta-error');
+      const successBox = document.getElementById('beta-success');
+      const submitBtn = document.getElementById('beta-submit');
+
+      const showError = (msg) => {
+        errorBox.textContent = msg;
+        errorBox.classList.remove('hidden');
+      };
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorBox.classList.add('hidden');
+
+        const email = form.email.value.trim();
+        const phone = form.phone.value.trim();
+
+        // Lightweight client-side validation.
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showError('Please enter a valid email address.');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Joining…';
+
+        try {
+          const res = await fetch('/api/beta-signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, phone, source: 'landing' }),
+          });
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            throw new Error(data.error || 'Something went wrong. Please try again.');
+          }
+          // Reveal the success message, hide the form.
+          form.classList.add('hidden');
+          successBox.classList.remove('hidden');
+        } catch (err) {
+          showError(err.message || 'Could not submit. Please try again.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Join Beta';
+        }
+      });
+    </script>
+  </body>
+</html>
