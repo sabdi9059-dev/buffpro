@@ -3,6 +3,7 @@ import { isSupabaseConfigured } from '@/lib/supabase';
 import { BookingFlow } from '@/components/booking/BookingFlow';
 import BookingCalendar from '@/components/booking/BookingCalendar';
 import TechnicianDashboard from '@/components/dashboard/TechnicianDashboard';
+import OwnerDashboard from '@/components/dashboard/OwnerDashboard';
 import { Spinner } from '@/components/ui/Spinner';
 import { AlertIcon } from '@/components/ui/icons';
 
@@ -32,6 +33,11 @@ export default function App() {
   // The technician dashboard is a full-screen page with its own header.
   if (route === 'dashboard') {
     return <TechnicianDashboard technicianName="John" />;
+  }
+
+  // The owner/admin dashboard is a full-screen page with its own tab nav.
+  if (route === 'admin') {
+    return <OwnerDashboard />;
   }
 
   // The standalone booking calendar is self-contained (no Supabase needed),
