@@ -197,6 +197,10 @@ export type CoatproDatabase = {
     };
     Views: Record<string, never>;
     Functions: {
+      get_my_membership: {
+        Args: Record<string, never>;
+        Returns: { business_id: string; role: string }[];
+      };
       get_loyalty_balance: {
         Args: { p_customer: string };
         Returns: number;

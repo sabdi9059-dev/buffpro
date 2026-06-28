@@ -72,6 +72,8 @@ Open the dev URL. Routes:
 - `/calendar` — standalone booking calendar widget (no backend needed).
 - `/dashboard` — technician dashboard with mock data (no backend needed).
 - `/admin` — owner/admin dashboard with tabs + mock data (no backend needed).
+- `/pay` — Stripe card payment demo.
+- `/login`, `/signup` — auth pages; `/account` — protected (requires login).
 
 The booking page loads the business identified by the URL path
 (e.g. `/demo-detailing`), falling back to `VITE_DEFAULT_BUSINESS_SLUG`.
@@ -176,6 +178,26 @@ Transactional + scheduled texts, all server-side:
 **Required env** (see `.env.example`): `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`, plus optional `SMS_COST_PER_MESSAGE`, `SMS_MONTHLY_BUDGET_USD`, `CRON_SECRET`, `INTERNAL_API_SECRET`, `APP_URL`.
 
 **Dev test numbers** (Twilio magic numbers): `+15005550006` succeeds · `+15005550001` invalid · `+15005550009` can't receive.
+
+## Authentication & multi-tenancy
+
+Email/password auth with Supabase, scoped per business:
+
+| File | Role |
+| --- | --- |
+| `src/auth/AuthContext.tsx` | `AuthProvider` + `useAuth()` → `{ user, session, businessId, role, isLoading, signUp, signIn, logout, isOwner, isTechnician }`. Checks the session on load and subscribes to auth changes; resolves tenancy via the `get_my_membership` RPC. |
+| `src/auth/ProtectedRoute.tsx` | Gate routes by auth (and optional `roles`): spinner while checking, redirect to `/login`, access-denied for wrong role. |
+| `src/pages/LoginPage.tsx` | Email + password + remember me, validation, errors. Route `/login`. |
+| `src/pages/SignUpPage.tsx` | Email + password + business name; handles the email-confirmation case. Route `/signup`. |
+| `src/pages/AccountPage.tsx` | Protected demo page showing user, business, role + permissions. Route `/account`. |
+
+**Sign-up flow:** `signUp` passes `business_name` as user metadata. The `handle_new_user` trigger in `full_schema.sql` then auto-creates the business `profiles` row and an `owner` `team_members` row — so a new owner is fully provisioned the moment their auth user exists.
+
+**Roles & isolation** (enforced by RLS in `full_schema.sql`, not just the UI):
+- **Owner** — edit settings, manage staff, see all of their business's data.
+- **Technician** — see only jobs assigned to them; mark them complete.
+- **Customer** — see only their own bookings.
+- No policy path lets one business read another's data.
 
 ## Security model
 

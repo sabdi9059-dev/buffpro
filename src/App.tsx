@@ -5,6 +5,11 @@ import BookingCalendar from '@/components/booking/BookingCalendar';
 import TechnicianDashboard from '@/components/dashboard/TechnicianDashboard';
 import OwnerDashboard from '@/components/dashboard/OwnerDashboard';
 import BookingPaymentForm from '@/components/payment/BookingPaymentForm';
+import { AuthProvider } from '@/auth/AuthContext';
+import { ProtectedRoute } from '@/auth/ProtectedRoute';
+import LoginPage from '@/pages/LoginPage';
+import SignUpPage from '@/pages/SignUpPage';
+import AccountPage from '@/pages/AccountPage';
 import { Spinner } from '@/components/ui/Spinner';
 import { AlertIcon } from '@/components/ui/icons';
 
@@ -27,9 +32,31 @@ function getBusinessSlug(): string {
 }
 
 export default function App() {
-  // Tiny client-side router. App itself calls no hooks, so early returns are
+  // The whole app lives inside the auth context so any route can use useAuth().
+  return (
+    <AuthProvider>
+      <Router />
+    </AuthProvider>
+  );
+}
+
+function Router() {
+  // Tiny client-side router. Router itself calls no hooks, so early returns are
   // safe; each route renders a component that owns its own hooks.
   const route = getRoute();
+
+  // Auth pages.
+  if (route === 'login') return <LoginPage />;
+  if (route === 'signup') return <SignUpPage />;
+
+  // Protected: only signed-in users (redirects to /login otherwise).
+  if (route === 'account') {
+    return (
+      <ProtectedRoute>
+        <AccountPage />
+      </ProtectedRoute>
+    );
+  }
 
   // The technician dashboard is a full-screen page with its own header.
   if (route === 'dashboard') {

@@ -259,6 +259,44 @@ returns boolean language sql stable security definer set search_path = public as
 $$;
 
 -- =============================================================================
+-- SIGN-UP TRIGGER
+-- When a new auth user is created, automatically provision their business
+-- (a `profiles` row) and add them as the `owner` in `team_members`. The
+-- business name comes from the sign-up metadata: supabase.auth.signUp({
+--   email, password, options: { data: { business_name, full_name } } }).
+-- Runs as definer so it can insert despite RLS.
+-- =============================================================================
+create or replace function handle_new_user()
+returns trigger language plpgsql security definer set search_path = public as $$
+declare
+  v_business uuid;
+  v_name text;
+begin
+  v_name := coalesce(nullif(new.raw_user_meta_data ->> 'business_name', ''), 'My Detailing Business');
+
+  insert into profiles (owner_id, business_name, email)
+  values (new.id, v_name, new.email)
+  returning id into v_business;
+
+  insert into team_members (business_id, user_id, full_name, email, role)
+  values (
+    v_business,
+    new.id,
+    coalesce(nullif(new.raw_user_meta_data ->> 'full_name', ''), v_name),
+    new.email,
+    'owner'
+  );
+
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function handle_new_user();
+
+-- =============================================================================
 -- ENABLE RLS
 -- =============================================================================
 alter table profiles      enable row level security;
@@ -419,6 +457,25 @@ create policy sms_select on sms_messages for select
 -- CONVENIENCE RPCs
 -- =============================================================================
 
+-- The current user's business + role (owner takes precedence over staff role).
+-- Used by the frontend AuthProvider to resolve tenancy in one round-trip.
+create or replace function get_my_membership()
+returns table (business_id uuid, role text)
+language sql stable security definer set search_path = public as $$
+  select s.business_id, s.role
+  from (
+    select p.id as business_id, 'owner'::text as role, 0 as pri
+    from profiles p
+    where p.owner_id = auth.uid()
+    union all
+    select tm.business_id, tm.role::text, 1 as pri
+    from team_members tm
+    where tm.user_id = auth.uid() and tm.is_active
+  ) s
+  order by s.pri
+  limit 1;
+$$;
+
 -- Loyalty balance for a customer (RLS-aware via the helper checks).
 create or replace function get_loyalty_balance(p_customer uuid)
 returns integer language sql stable security definer set search_path = public as $$
@@ -470,6 +527,7 @@ grant select on services, reviews to anon;
 -- Authenticated users: full DML on all tables (RLS restricts the rows).
 grant select, insert, update, delete on all tables in schema public to authenticated;
 
+grant execute on function get_my_membership() to authenticated;
 grant execute on function get_loyalty_balance(uuid) to anon, authenticated;
 grant execute on function get_today_revenue_cents(uuid) to authenticated;
 grant execute on function get_revenue_last_7_days(uuid) to authenticated;
