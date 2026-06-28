@@ -74,6 +74,7 @@ Open the dev URL. Routes:
 - `/admin` — owner/admin dashboard with tabs + mock data (no backend needed).
 - `/pay` — Stripe card payment demo.
 - `/login`, `/signup` — auth pages; `/account` — protected (requires login).
+- `/landing.html` — standalone marketing landing page (static HTML, no framework).
 
 The booking page loads the business identified by the URL path
 (e.g. `/demo-detailing`), falling back to `VITE_DEFAULT_BUSINESS_SLUG`.
@@ -178,6 +179,12 @@ Transactional + scheduled texts, all server-side:
 **Required env** (see `.env.example`): `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`, plus optional `SMS_COST_PER_MESSAGE`, `SMS_MONTHLY_BUDGET_USD`, `CRON_SECRET`, `INTERNAL_API_SECRET`, `APP_URL`.
 
 **Dev test numbers** (Twilio magic numbers): `+15005550006` succeeds · `+15005550001` invalid · `+15005550009` can't receive.
+
+## Marketing landing page
+
+`public/landing.html` is a **standalone**, copy-pasteable marketing page (no React) served at **`/landing.html`**: hero, 6 feature cards, 3-tier pricing (Pro highlighted), testimonials, an accessible FAQ accordion (native `<details>`), a beta-signup form, and a footer. It uses the Tailwind Play CDN + a little vanilla JS, and posts the beta form to `POST /api/beta-signup` (`api/beta-signup.ts` → `beta_signups` table). Brand gradient purple `#667eea` → blue `#764ba2`, accent green `#10b981`, system fonts.
+
+> For best production performance, compile Tailwind instead of the CDN — the markup is unchanged.
 
 ## Authentication & multi-tenancy
 

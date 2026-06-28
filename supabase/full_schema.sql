@@ -204,6 +204,15 @@ create table if not exists sms_messages (
 create index if not exists sms_business_idx on sms_messages (business_id);
 create index if not exists sms_created_idx on sms_messages (created_at);
 
+-- 10) beta_signups — marketing landing-page waitlist (not tenant-scoped).
+create table if not exists beta_signups (
+  id         uuid primary key default gen_random_uuid(),
+  email      text not null unique,
+  phone      text,
+  source     text not null default 'landing',
+  created_at timestamptz not null default now()
+);
+
 -- updated_at triggers (tables that track edits)
 do $$
 declare t text;
@@ -308,6 +317,9 @@ alter table photos        enable row level security;
 alter table reviews       enable row level security;
 alter table loyalty_points enable row level security;
 alter table sms_messages  enable row level security;
+alter table beta_signups  enable row level security;
+-- No policies on beta_signups → only the service-role key (used by the
+-- /api/beta-signup function) can read/write it. anon/authenticated get nothing.
 
 -- =============================================================================
 -- POLICIES
