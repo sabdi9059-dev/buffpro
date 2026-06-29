@@ -9,6 +9,13 @@
  * For now we maintain them by hand so the app is fully typed out of the box.
  */
 
+import type {
+  AdminBooking,
+  AdminCustomer,
+  DashboardStats,
+  RevenueDay,
+} from './admin';
+
 export type BookingStatus =
   | 'pending'
   | 'confirmed'
@@ -146,6 +153,49 @@ export type Database = {
           p_notes: string | null;
         };
         Returns: CreateBookingResult[];
+      };
+      // ---- Owner/admin dashboard RPCs (see supabase/admin.sql) ----
+      admin_dashboard_stats: {
+        Args: { p_business_id: string };
+        Returns: DashboardStats[];
+      };
+      admin_revenue_last_7_days: {
+        Args: { p_business_id: string };
+        Returns: RevenueDay[];
+      };
+      admin_list_bookings: {
+        Args: { p_business_id: string };
+        Returns: AdminBooking[];
+      };
+      admin_list_customers: {
+        Args: { p_business_id: string };
+        Returns: AdminCustomer[];
+      };
+      admin_update_business: {
+        Args: {
+          p_business_id: string;
+          p_name: string;
+          p_phone: string;
+          p_email: string;
+          p_opening_time: string;
+          p_closing_time: string;
+        };
+        Returns: Business;
+      };
+      admin_upsert_service: {
+        Args: {
+          p_business_id: string;
+          p_service_id: string | null;
+          p_name: string;
+          p_description: string | null;
+          p_duration_minutes: number;
+          p_price_cents: number;
+        };
+        Returns: Service;
+      };
+      admin_delete_service: {
+        Args: { p_business_id: string; p_service_id: string };
+        Returns: { hard_deleted: boolean }[];
       };
     };
     Enums: {
