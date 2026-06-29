@@ -91,10 +91,11 @@ as $$
 begin
   update bookings set
     status     = 'in_progress',
-    started_at = coalesce(started_at, now())
+    started_at = coalesce(bookings.started_at, now())
   where id = p_booking_id
     and business_id = p_business_id
-    and status not in ('cancelled', 'no_show', 'completed');
+    -- qualify: an OUT column is also named `status`, so bare `status` is ambiguous
+    and bookings.status not in ('cancelled', 'no_show', 'completed');
 
   if not found then
     raise exception 'Job not found or cannot be started';
@@ -128,7 +129,8 @@ begin
     customer_approved = coalesce(p_customer_approved, false)
   where id = p_booking_id
     and business_id = p_business_id
-    and status not in ('cancelled', 'no_show');
+    -- qualify: an OUT column is also named `status`, so bare `status` is ambiguous
+    and bookings.status not in ('cancelled', 'no_show');
 
   if not found then
     raise exception 'Job not found';
