@@ -20,6 +20,7 @@ public, mobile-first **customer booking flow** wired end-to-end to Supabase.
 | **Availability** | `get_available_slots` RPC computes open time slots server-side from business hours + existing bookings (no booking data leaks to the client). |
 | **Atomic booking** | `create_booking` RPC upserts the customer and creates the booking in one transaction, rejecting double-bookings. |
 | **Type safety** | Hand-written `src/types/database.ts` typing the Supabase client end-to-end. |
+| **Owner dashboard** | `/admin` — KPIs, a 7-day revenue chart, customer & booking management, and editable business settings/services. Backed by `admin_*` RPCs in `supabase/admin.sql`. |
 
 ---
 
@@ -65,6 +66,22 @@ npm run lint     # ESLint
 
 Open the dev URL. The booking page loads the business identified by the URL
 path (e.g. `/demo-detailing`), falling back to `VITE_DEFAULT_BUSINESS_SLUG`.
+
+### 4. Owner dashboard (`/admin`)
+
+The owner dashboard lives at `/admin` (also `/dashboard`). It needs the
+server-side admin RPCs, so run [`supabase/admin.sql`](./supabase/admin.sql)
+**after** `schema.sql` (it also seeds extra demo bookings/customers so the
+dashboard isn't empty):
+
+```bash
+# hosted: paste into the Supabase SQL editor. local CLI:
+psql "$DB_URL" -f supabase/admin.sql
+```
+
+> Security: the `admin_*` RPCs are currently granted to `anon` because the app
+> has no login yet. Once staff auth lands, revoke them from `anon` and gate on
+> `auth.uid()` — see the note at the top of `supabase/admin.sql`.
 
 ---
 

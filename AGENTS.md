@@ -47,6 +47,10 @@ Startup sequence for a fresh session:
 6. `npm run dev` and open the app. The seed creates a `demo-detailing` business
    with four services; the page resolves the business from the URL slug, falling
    back to `VITE_DEFAULT_BUSINESS_SLUG`.
+7. For the owner dashboard at `/admin`, also apply `supabase/admin.sql` (after
+   `schema.sql`). It adds the `admin_*` RPCs the dashboard reads/writes through
+   and seeds extra demo bookings/customers:
+   `docker exec -i supabase_db_workspace psql -U postgres -d postgres < supabase/admin.sql`
 
 Notes:
 - Restart the dev server after changing `.env` (Vite only reads env at startup).
