@@ -15,10 +15,12 @@ import type {
   DashboardStats,
   RevenueDay,
 } from './admin';
+import type { TechJob } from './tech';
 
 export type BookingStatus =
   | 'pending'
   | 'confirmed'
+  | 'in_progress'
   | 'completed'
   | 'cancelled'
   | 'no_show';
@@ -196,6 +198,25 @@ export type Database = {
       admin_delete_service: {
         Args: { p_business_id: string; p_service_id: string };
         Returns: { hard_deleted: boolean }[];
+      };
+      // ---- Technician dashboard RPCs (see supabase/technician.sql) ----
+      tech_list_today_jobs: {
+        Args: { p_business_id: string };
+        Returns: TechJob[];
+      };
+      tech_start_job: {
+        Args: { p_business_id: string; p_booking_id: string };
+        Returns: { booking_id: string; status: BookingStatus }[];
+      };
+      tech_complete_job: {
+        Args: {
+          p_business_id: string;
+          p_booking_id: string;
+          p_notes: string | null;
+          p_photo_path: string | null;
+          p_customer_approved: boolean;
+        };
+        Returns: { booking_id: string; status: BookingStatus }[];
       };
     };
     Enums: {
