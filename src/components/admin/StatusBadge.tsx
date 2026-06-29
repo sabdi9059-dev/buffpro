@@ -10,6 +10,8 @@ function present(status: BookingStatus): { label: string; classes: string } {
   switch (status) {
     case 'completed':
       return { label: 'Completed', classes: 'bg-emerald-100 text-emerald-700' };
+    case 'in_progress':
+      return { label: 'In Progress', classes: 'bg-indigo-100 text-indigo-700' };
     case 'cancelled':
     case 'no_show':
       return { label: 'Cancelled', classes: 'bg-red-100 text-red-700' };
