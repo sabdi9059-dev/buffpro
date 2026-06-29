@@ -35,7 +35,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
           {data.map((d) => {
             const heightPct = axisMax === 0 ? 0 : (d.revenue_cents / axisMax) * 100;
             return (
-              <div key={d.day} className="group flex flex-1 flex-col items-center justify-end">
+              <div key={d.day} className="group flex h-full flex-1 flex-col items-center justify-end">
                 {/* Tooltip */}
                 <div className="pointer-events-none mb-1 rounded-md bg-slate-900 px-2 py-1 text-[11px] font-semibold text-white opacity-0 shadow transition-opacity group-hover:opacity-100">
                   {formatPrice(d.revenue_cents)}
